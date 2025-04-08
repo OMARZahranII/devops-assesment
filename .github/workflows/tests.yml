@@ -11,6 +11,23 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
     
+    # Add PostgreSQL service container
+    services:
+      postgres:
+        image: postgres:12-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: bdb
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,6 +43,13 @@ jobs:
 
       - name: Run tests
         run: go test -v -cover ./...
+        env:
+          # Set environment variables to connect to the PostgreSQL service
+          BANK_POSTGRES_HOST: localhost
+          BANK_POSTGRES_PORT: 5432
+          BANK_POSTGRES_USER: test
+          BANK_POSTGRES_PASSWORD: test
+          BANK_POSTGRES_DB: bdb
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
