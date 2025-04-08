@@ -41,10 +41,10 @@ jobs:
       - name: Install dependencies
         run: go mod download
         
-      # Create a test config file that points to the GitHub Actions PostgreSQL service
-      - name: Create test config
+      # Modify the default config file directly
+      - name: Update default config
         run: |
-          cat > config/test.yaml << EOF
+          cat > config/default.yaml << EOF
           app:
             versions:
               postgres: 1683195350
@@ -61,17 +61,20 @@ jobs:
             automigrate: true
           EOF
           
-      # Set environment variable to use the test config
+      # Run tests with explicit database connection
       - name: Run tests
         run: go test -v -cover ./...
         env:
-          CONFIG_FILE: config/test.yaml
-          # Direct database URL as fallback
-          DATABASE_URL: postgres://test:test@localhost:5432/bdb
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: test
+          PGPASSWORD: test
+          PGDATABASE: bdb
+          PGSSLMODE: disable
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage.out
-        if: success() 
+      # - name: Upload coverage report
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: coverage-report
+      #     path: coverage.out
+      #   if: success() 
