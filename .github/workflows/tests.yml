@@ -40,16 +40,34 @@ jobs:
 
       - name: Install dependencies
         run: go mod download
-
+        
+      # Create a test config file that points to the GitHub Actions PostgreSQL service
+      - name: Create test config
+        run: |
+          cat > config/test.yaml << EOF
+          app:
+            versions:
+              postgres: 1683195350
+            environment: test
+            host: 0.0.0.0
+            port: "8080"
+          postgres:
+            host: localhost
+            port: 5432
+            database: bdb
+            userName: test
+            password: test
+            sslMode: disable
+            automigrate: true
+          EOF
+          
+      # Set environment variable to use the test config
       - name: Run tests
         run: go test -v -cover ./...
         env:
-          # Set environment variables to connect to the PostgreSQL service
-          BANK_POSTGRES_HOST: localhost
-          BANK_POSTGRES_PORT: 5432
-          BANK_POSTGRES_USER: test
-          BANK_POSTGRES_PASSWORD: test
-          BANK_POSTGRES_DB: bdb
+          CONFIG_FILE: config/test.yaml
+          # Direct database URL as fallback
+          DATABASE_URL: postgres://test:test@localhost:5432/bdb
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
