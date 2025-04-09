@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      BANK_POSTGRES_HOST: postgres
+      BANK_POSTGRES_PORT: 5432
+      BANK_POSTGRES_USERNAME: postgres
+      BANK_POSTGRES_PASSWORD: postgres
+      BANK_POSTGRES_DATABASE: bank
+      BANK_MIGRATE: "true"
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bank
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data: 
