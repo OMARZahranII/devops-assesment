@@ -24,7 +24,7 @@ This document outlines the DevOps implementation for the Bank Transaction API. T
   - Resource limits and requests
   - Health checks
 
-![Kubernetes Deployment](images/kubernetes-deployment)
+![Kubernetes Deployment](images/kubernetes-deployment.png)
 
 ## Secure Handling of Sensitive Information
 
