@@ -16,8 +16,6 @@ This document outlines the DevOps implementation for the Bank Transaction API. T
 - **Test Workflow**: Runs unit tests for the application code (manually triggered)
 - **Docker Build Workflow**: Builds and pushes Docker images to GitHub Container Registry
 
-![CI/CD Pipeline](images/cicd-pipeline.png)
-
 ### 3. Kubernetes Deployment
 - **Helm Chart**: Complete deployment configuration for Kubernetes
   - 5 replicas as specified in the requirements
@@ -26,7 +24,7 @@ This document outlines the DevOps implementation for the Bank Transaction API. T
   - Resource limits and requests
   - Health checks
 
-![Kubernetes Deployment](images/kubernetes-deployment.png)
+![Kubernetes Deployment](images/kubernetes-deployment)
 
 ## Secure Handling of Sensitive Information
 
@@ -68,8 +66,6 @@ Instead of hardcoding credentials in the Helm values file, I've:
          name: bank-api-db-credentials
    ```
 
-![Secrets Management](images/secrets-management.png)
-
 This way, the actual credentials are:
 - Never stored in the Git repository
 - Only provided at deployment time
@@ -83,8 +79,6 @@ For local development and testing:
 1. Clone the repository
 2. Run `docker-compose up`
 3. The application will be available at http://localhost:8080
-
-![Local Development](images/local-development.png)
 
 ## CI/CD Workflows
 
@@ -108,5 +102,3 @@ To deploy the application:
      --namespace bank-api \
      --create-namespace
    ```
-
-![Deployment Process](images/deployment-process.png)
