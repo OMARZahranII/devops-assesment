@@ -24,6 +24,8 @@ RUN apk --no-cache add ca-certificates
 # Copy the binary from the builder stage
 COPY --from=builder /app/bank-api .
 COPY --from=builder /app/config ./config
+# Make sure to copy the migrations directory
+COPY --from=builder /app/db/migrations ./db/migrations
 
 # Create a non-root user to run the application
 RUN adduser -D -H -h /app appuser

@@ -3,7 +3,7 @@ replicaCount: 5
 image:
   repository: ghcr.io/omarzahranii/devops-assesment
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "sha-a07628a"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -49,19 +49,19 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-nodeSelector:
-  role: api
+# nodeSelector:
+#   role: api
 
-affinity:
-  podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchExpressions:
-            - key: app.kubernetes.io/name
-              operator: In
-              values:
-                - bank-api
-        topologyKey: "kubernetes.io/hostname"
+# affinity:
+#   podAntiAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#       - labelSelector:
+#           matchExpressions:
+#             - key: app.kubernetes.io/name
+#               operator: In
+#               values:
+#                 - bank-api
+#         topologyKey: "kubernetes.io/hostname"
 
 tolerations: []
 
@@ -85,32 +85,14 @@ readinessProbe:
 
 env:
   - name: BANK_POSTGRES_HOST
-    value: "postgres-service"
+    value: "postgres-postgresql.bank-db.svc.cluster.local"
   - name: BANK_POSTGRES_PORT
     value: "5432"
   - name: BANK_POSTGRES_USER
-    valueFrom:
-      secretKeyRef:
-        name: bank-api-db-credentials
-        key: username
+    value: "postgres"
   - name: BANK_POSTGRES_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: bank-api-db-credentials
-        key: password
+    value: "postgres"
   - name: BANK_POSTGRES_DB
     value: "bank"
   - name: BANK_MIGRATE
     value: "true"
-
-postgresql:
-  enabled: true
-  auth:
-    # These will be overridden during deployment
-    username: ""
-    password: ""
-    database: bank
-  primary:
-    persistence:
-      enabled: true
-      size: 8Gi 
