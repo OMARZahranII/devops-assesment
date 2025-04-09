@@ -4,6 +4,9 @@
 
 This document outlines the DevOps implementation for the Bank Transaction API. The solution includes containerization with Docker, CI/CD pipelines with GitHub Actions, and Kubernetes deployment using Helm.
 
+![public Deployment](images/public-deployment.png)
+
+
 ## Components
 
 ### 1. Docker Setup
